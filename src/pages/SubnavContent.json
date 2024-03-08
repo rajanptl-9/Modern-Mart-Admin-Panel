@@ -1,0 +1,21 @@
+{
+    "Catalog": [
+       "Add Anything",
+       "Product List",
+       "Brand List",
+       "Category List",
+       "Color List"
+    ],
+    "Customer": [
+       "Block Customer",
+       "Unblock Customer"
+    ],
+    "Coupon": [
+       "Add Coupon",
+       "Coupon List"
+    ],
+    "Setting": [
+       "Log Out",
+       "Change Password"
+    ]
+ }
