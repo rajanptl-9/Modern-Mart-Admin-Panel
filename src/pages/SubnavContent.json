@@ -1,9 +1,12 @@
 {
     "Catalog": [
-       "Add Anything",
+       "Add Product",
        "Product List",
+       "Add Brand",
        "Brand List",
+       "Add Category",
        "Category List",
+       "Add Color",
        "Color List"
     ],
     "Customer": [

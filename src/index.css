@@ -11,3 +11,30 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.alert {
+  position: absolute;
+  width: 40%;
+  height: min-content;
+  padding: 10px;
+  font-size: 14px;
+  margin: 0;
+  top: 5%;
+  left: 30vw;
+}
+
+.auth-error {
+  position: absolute;
+  height: min-content;
+  padding: 10px;
+  font-size: 14px;
+  margin: 0;
+  left: -4px;
+  bottom: -26px;
+}
+
+.highlightOption, .highlight {
+  color: black;
+  background-color: #fff;
+}

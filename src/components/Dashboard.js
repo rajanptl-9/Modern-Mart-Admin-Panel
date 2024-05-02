@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Column } from '@ant-design/plots';
-import { Button, Table } from 'antd';
 import { FaArrowTrendUp } from "react-icons/fa6";
+import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { getOrders } from '../features/orders/orderSlice';
+import CommonTable from './CommonTable';
 
 const columns = [
   {
@@ -9,52 +14,34 @@ const columns = [
     dataIndex: 'key',
   },
   {
-    title: 'Name',
-    dataIndex: 'name',
+    title: 'Order List',
+    dataIndex: 'orderList',
+  },
+  {
+    title: 'Date & Time',
+    dataIndex: 'date',
+  },
+  {
+    title: 'Customer info',
+    dataIndex: 'orderedBy',
+  },
+  {
+    title: 'Total Amount',
+    dataIndex: 'amount',
   },
   {
     title: 'Status',
     dataIndex: 'status',
   },
-  {
-    title: 'Date',
-    dataIndex: 'date',
-  },
-  {
-    title: 'Product',
-    dataIndex: 'product',
-  },
+  // {
+  //   title: 'Action',
+  //   dataIndex: 'action',
+  // },
 ];
-const tabledata = [];
-for (let i = 0; i < 46; i++) {
-  tabledata.push({
-    key: i,
-    name: `Edward King ${i}`,
-    status: "Active",
-    date: `${new Date()}`,
-    product: `My product ${i}`,
-  });
-}
+
 const Dashboard = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const start = () => {
-    setLoading(true);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
+  const dispatch = useDispatch();
+
   const data = [
     {
       type: 'Jan',
@@ -135,6 +122,37 @@ const Dashboard = () => {
     },
   };
 
+  useEffect(() => {
+    dispatch(getOrders());
+  }, [dispatch]);
+
+  const orderState = useSelector((state) => state.orders);
+  const orders = orderState.orders;
+
+  const tabledata = [];
+  if(orders){
+    for (let i = 0; i < orders.length; i++) {
+      let totalAmount = 0;
+      for (let j = 0; j < orders[i].products.length; j++) {  
+        totalAmount += orders[i].products[j].product.price * orders[i].products[j].count;
+      }
+      tabledata.push({
+        key: i+1,
+        orderList: <ul className='list-unstyled'>
+          {orders[i].products.map((product) => <li key={product._id} className='mb-1'>{product.product.title}&nbsp; ({product.product.price}x{product.count})</li>)}
+        </ul>,
+        date: orders[i].createdAt.replace('T', ' ').replace('Z', ' ').replace(/\.(\d{3})/g, ''),
+        orderedBy: `${orders[i].orderedBy.firstname} ${orders[i].orderedBy.lastname}`,
+        amount: totalAmount,
+        status: orders[i].orderStatus,
+        action: <>
+          <Link to="" className="text-decoration-none text-primary"><FaRegEdit className='me-2 fs-6' /></Link>
+          <Link to="" className="text-decoration-none text-danger"><MdOutlineDeleteForever className='me-2 fs-5' /></Link>
+        </>,
+      });
+    }
+  }
+
   return (
     <>
       <div className="dashboard-wrapper">
@@ -145,7 +163,7 @@ const Dashboard = () => {
               <h1 className="mb-0">$3100</h1>
             </div>
             <div className="d-flex flex-column align-items-end justify-content-between h-100">
-              <p className="mb-0 fw-bold fs-5 text-success"><FaArrowTrendUp className='me-2'/>34%</p>
+              <p className="mb-0 fw-bold fs-5 text-success"><FaArrowTrendUp className='me-2' />34%</p>
               <h6 className="mb-1 fw-normal">Compared to Last Month 2024</h6>
             </div>
           </div>
@@ -155,7 +173,7 @@ const Dashboard = () => {
               <h1 className="mb-0">$3100</h1>
             </div>
             <div className="d-flex flex-column align-items-end justify-content-between h-100">
-              <p className="mb-0 fw-bold fs-5 text-success"><FaArrowTrendUp className='me-2'/>34%</p>
+              <p className="mb-0 fw-bold fs-5 text-success"><FaArrowTrendUp className='me-2' />34%</p>
               <h6 className="mb-1 fw-normal">Compared to Last Month 2024</h6>
             </div>
           </div>
@@ -165,7 +183,7 @@ const Dashboard = () => {
               <h1 className="mb-0">$3100</h1>
             </div>
             <div className="d-flex flex-column align-items-end justify-content-between h-100">
-              <p className="mb-0 fw-bold fs-5 text-success"><FaArrowTrendUp className='me-2'/>34%</p>
+              <p className="mb-0 fw-bold fs-5 text-success"><FaArrowTrendUp className='me-2' />34%</p>
               <h6 className="mb-1 fw-normal">Compared to Last Month 2024</h6>
             </div>
           </div>
@@ -180,19 +198,8 @@ const Dashboard = () => {
             className='d-flex justify-content-between align-items-center gap-16 flex-wrap bg-white p-3 rounded-3'
           >
             <h2 className="mb-0">Recent Orders</h2>
-            <span
-              style={{
-                marginLeft: 8,
-              }}
-            >
-              {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-            </span>
-            <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
-              Reload
-            </Button>
-            
           </div>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={tabledata} />
+          <CommonTable data={tabledata} columns={columns} />
         </div>
       </div>
     </>

@@ -1,84 +1,94 @@
-import React, { useState } from 'react';
-import { Button, Table } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Modal } from 'antd';
+import { getBlockedCustomers, unblockCustomer } from '../features/customers/customerSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { CgUnblock  } from "react-icons/cg";
+
 const columns = [
     {
         title: 'S No.',
         dataIndex: 'key',
+        render: (text, record, index) => index + 1,
     },
     {
         title: 'Name',
         dataIndex: 'name',
+        defaultSortOrder: "descend",
+        sorter: (a,b) => a.name.localeCompare(b.name),
     },
     {
-        title: 'Status',
-        dataIndex: 'status',
+        title: 'Phone',
+        dataIndex: 'phone',
     },
     {
-        title: 'Date',
-        dataIndex: 'date',
+        title: 'E-mail',
+        dataIndex: 'email',
     },
     {
-        title: 'Product',
-        dataIndex: 'product',
+        title: 'Action',
+        dataIndex: 'action',
     },
 ];
-const tabledata = [];
-for (let i = 0; i < 46; i++) {
-    tabledata.push({
-        key: i,
-        name: `Edward King ${i}`,
-        status: "Active",
-        date: `${new Date()}`,
-        product: `My product ${i}`,
-    });
-}
 
-const UnblockCustomer = () => {
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const start = () => {
-        setLoading(true);
-        // ajax request after empty completing
-        setTimeout(() => {
-            setSelectedRowKeys([]);
-            setLoading(false);
-        }, 1000);
-    };
-    const onSelectChange = (newSelectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
+
+const BlockCustomer = () => {
+    const dispatch = useDispatch();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [blockId, setBlockId] = useState(null);
+
+    const unblockedCustomer = useSelector(state => state.customers.unblockedCustomer);
+
+
+    useEffect(() => {
+        dispatch(getBlockedCustomers());
+    }, [dispatch, unblockedCustomer]);
+
+    const handleUnblockCustomer = (id) => {
+        setBlockId(id);
+        setModalOpen(true);
+    }
+    
+    const confirmDelete = () => {
+        setModalOpen(false);
+        dispatch(unblockCustomer(blockId));
+    }
+
+    const customerState = useSelector((state) => state.customers.customers);
+    const tabledata = [];
+    //eslint-disable-next-line
+    if(customerState){
+        //eslint-disable-next-line
+        customerState.map((customer, index) => {
+            tabledata.push({
+                key: index,
+                name: `${customer.firstname} ${customer.lastname}`,
+                phone: customer.mobile,
+                email: customer.email,
+                action: <button className='me-2 bg-white border-0 text-info d-flex align-items-center' onClick={() => handleUnblockCustomer(customer._id)}>
+                    <CgUnblock  className='fs-5' /> Unblock
+                </button>
+            });
+        });
+    }
     return (
         <>
             <div className='w-100'>
-                <div
-                    style={{
-                        marginBottom: 16,
-                    }}
-                    className='d-flex justify-content-between align-items-center gap-16 flex-wrap bg-white p-3 rounded-3'
-                >
-                    <h2 className="mb-0">Blocked Customers</h2>
-                    <span
-                        style={{
-                            marginLeft: 8,
-                        }}
-                    >
-                        {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-                    </span>
-                    <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
-                        Reload
-                    </Button>
-
+                <div style={{ marginBottom: 16, }} className='d-flex justify-content-between align-items-center gap-16 flex-wrap bg-white p-3 rounded-3'>
+                    <h2 className="mb-0">Blocked List</h2> 
                 </div>
-                <Table rowSelection={rowSelection} columns={columns} dataSource={tabledata} />
+                <Table columns={columns} dataSource={tabledata} />
+                <Modal
+                    title="Confirm Block User"
+                    centered
+                    open={modalOpen}
+                    onOk={() => confirmDelete()}
+                    onCancel={() => {setModalOpen(false); setBlockId(null)}}
+                >
+                    <p>Are you sure want to block user?</p>
+                </Modal>
             </div>
         </>
     )
 }
 
-export default UnblockCustomer;
+export default BlockCustomer;

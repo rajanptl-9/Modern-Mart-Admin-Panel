@@ -5,18 +5,25 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
-import { DashboardOutlined, MailOutlined, DatabaseOutlined, ShoppingCartOutlined, ContainerOutlined, LineChartOutlined, SettingOutlined, DollarOutlined } from '@ant-design/icons';
+import { DashboardOutlined, MailOutlined, DatabaseOutlined, ShoppingCartOutlined,  SettingOutlined, DollarOutlined } from '@ant-design/icons';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { resetState } from '../features/auth/authSlice';
 const { Header, Sider, Content } = Layout;
 const jsonData = require('./SubnavContent.json');
 const admin = require('../images/admin.png');
 const india = require('../images/india.png');
 
 const DashboardLayout = () => {
+  const dispatch = useDispatch();
+
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
   useEffect(() => {
-    if(!sessionStorage.getItem('token')) navigate('/');    
+    if (!user) {
+      navigate('/');
+    };
   });
-  
+
 
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -24,8 +31,8 @@ const DashboardLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const subnavlable = ['Dashboard', 'Catalog', 'Customer', 'Orders', 'Enquiries', 'Coupon', 'File Manager', 'Analytic', 'Setting'];
-  const subnav = [DashboardOutlined, DatabaseOutlined, UserOutlined, ShoppingCartOutlined, MailOutlined, DollarOutlined, ContainerOutlined, LineChartOutlined, SettingOutlined].map((icon, index) => {
+  const subnavlable = ['Dashboard', 'Catalog', 'Customer', 'Orders', 'Enquiries', 'Coupon', 'Setting'];
+  const subnav = [DashboardOutlined, DatabaseOutlined, UserOutlined, ShoppingCartOutlined, MailOutlined, DollarOutlined, SettingOutlined].map((icon, index) => {
     return {
       key: `${subnavlable[index]}`,
       icon: React.createElement(icon),
@@ -38,7 +45,6 @@ const DashboardLayout = () => {
       }) : null,
     };
   });
-
   const handleMenuClick = (key) => {
     if (key === "Dashboard") {
       navigate("/admin");
@@ -46,16 +52,22 @@ const DashboardLayout = () => {
       navigate("block-customer");
     } else if (key === "Unblock Customer") {
       navigate("unblock-customer");
-    } else if (key === "Add Anything") {
-      navigate("add-anything");
+    } else if (key === "Add Product") {
+      navigate("add-product");
     } else if (key === "Product List") {
       navigate("product-list");
     } else if (key === "Category List") {
       navigate("category-list");
-    } else if (key === "Color List") {
+    } else if (key === "Add Category") {
+      navigate("add-category");
+    }else if (key === "Color List") {
       navigate("color-list");
+    } else if (key === "Add Color") {
+      navigate("add-color");
     } else if (key === "Brand List") {
       navigate("brand-list");
+    } else if (key === "Add Brand") {
+      navigate("add-brand");
     } else if (key === "Orders") {
       navigate("order-list");
     } else if (key === "Enquiries") {
@@ -65,17 +77,21 @@ const DashboardLayout = () => {
     } else if (key === "Coupon List") {
       navigate("coupon-list");
     } else if (key === "Log Out") {
-      sessionStorage.removeItem('token');
-      window.location.reload();
+      localStorage.removeItem('user');
+      dispatch(resetState());      
+      window.location.replace("/");
     } else if (key === "Change Password") {
-      sessionStorage.removeItem('token');
-      navigate("/forgot-password");
+      localStorage.removeItem('user');
+      dispatch(resetState());
+      setTimeout(() => {
+        navigate("/forgot-password");
+      }, 500);
     } else {
       navigate('/admin');
     }
   }
   return (
-    <div className='dashboard-layout-wrapper'>
+    <div className='dashboard-layout-wrapper' /**onContextMenu={e => e.preventDefault()}*/>
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="demo-logo-vertical" >Modern Mart</div>
@@ -109,12 +125,12 @@ const DashboardLayout = () => {
                 }}
               />
               <div className="menu-bar d-flex justify-content-end align-items-center">
-                  <img src={india} alt="flag" height={32} width={48} className='rounded-2 me-3'/>
+                <img src={india} alt="flag" height={32} width={48} className='rounded-2 me-3' />
                 <div className='admin-details d-flex align-items-center gap-8'>
                   <img src={admin} alt="admin" height={36} width={36} />
                   <span className='admin-email d-flex justify-content-center flex-column align-items-start'>
-                    <span className='mb-0 p-0'>Admin Name</span>
-                    <span className='mb-0 p-0'> Admin email address</span>
+                    <span className='mb-0 p-0'>{user.firstname} {user.lastname}</span>
+                    <span className='mb-0 p-0'>{user.email}</span>
                   </span>
                 </div>
               </div>
