@@ -3,6 +3,7 @@ import { Table, Modal } from 'antd';
 import { blockCustomer, getUnblockedCustomers } from '../features/customers/customerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { CgBlock  } from "react-icons/cg";
+import { ToastContainer } from 'react-toastify';
 
 const columns = [
     {
@@ -72,6 +73,7 @@ const BlockCustomer = () => {
     }
     return (
         <>
+            <ToastContainer/>
             <div className='w-100'>
                 <div style={{ marginBottom: 16, }} className='d-flex justify-content-between align-items-center gap-16 flex-wrap bg-white p-3 rounded-3'>
                     <h2 className="mb-0">Unblocked List</h2> 

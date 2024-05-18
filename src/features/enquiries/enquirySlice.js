@@ -1,5 +1,8 @@
 import {createSlice, createAsyncThunk, createAction} from '@reduxjs/toolkit';
 import enquiryServices from './enquiryServices';
+import { toast } from 'react-toastify';
+import logout from '../../utils/logout';
+import { toastError, toastSuccess } from '../../utils/tostify';
 
 const initialState = {
     enquiries: null,
@@ -72,6 +75,9 @@ const enquirySlice = createSlice({
             state.isSuccess = false;
             state.enquiries = null;
             state.message = action.error.message;
+            if (logout(action.error.message)) {
+                toastError('Session Expired! Please Log In.')
+            }
         })
         .addCase(getOneEnquiry.pending, (state) => {
             state.isLoading = true;
@@ -91,6 +97,9 @@ const enquirySlice = createSlice({
             state.isSuccess = false;
             state.enquiryData = null;
             state.message = action.error.message;
+            if (logout(action.error.message)) {
+                toastError('Session Expired! Please Log In.')
+            }
         })
         .addCase(updateEnquiry.pending, (state) => {
             state.isLoading = true;
@@ -103,6 +112,7 @@ const enquirySlice = createSlice({
             state.isSuccess = true;
             state.enquiryData = payload;
             state.message = "Enquiry Updated successfully";
+            toastSuccess("Enquiry Updated!");
         })
         .addCase(updateEnquiry.rejected, (state, action) => {
             state.isLoading = false;
@@ -110,6 +120,11 @@ const enquirySlice = createSlice({
             state.isSuccess = false;
             state.enquiryData = null;
             state.message = action.error.message;
+            if (logout(action.error.message)) {
+                toastError('Session Expired! Please Log In.')
+            }else{
+                toast("Enquiry Failed to Update!");
+            }
         })
         .addCase(deleteEnquiry.pending, (state) => {
             state.isLoading = true;
@@ -122,6 +137,7 @@ const enquirySlice = createSlice({
             state.isSuccess = true;
             state.deletedEnquiry = payload;
             state.message = "Enquiry Updated successfully";
+            toastSuccess("Enquiry Updated!");
         })
         .addCase(deleteEnquiry.rejected, (state, action) => {
             state.isLoading = false;
@@ -129,6 +145,11 @@ const enquirySlice = createSlice({
             state.isSuccess = false;
             state.deletedEnquiry = null;
             state.message = action.error.message;
+            if (logout(action.error.message)) {
+                toastError('Session Expired! Please Log In.')
+            }else{
+                toastError("Enquiry Failed to Delete!");
+            }
         })
         .addCase(resetState, () => initialState)        
     }

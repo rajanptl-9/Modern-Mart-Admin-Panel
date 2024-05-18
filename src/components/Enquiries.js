@@ -5,6 +5,7 @@ import { deleteEnquiry, getEnquiries, updateEnquiry } from '../features/enquirie
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { LuEye } from "react-icons/lu";
 import { Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 const columns = [
     {
@@ -68,8 +69,6 @@ const Enquiries = () => {
         setModalOpen(true);
     }
 
-
-
     const enquiryState = useSelector((state) => state.enquiries.enquiries);
     const tabledata = [];
     if (enquiryState) {
@@ -96,6 +95,7 @@ const Enquiries = () => {
 
     return (
         <>
+            <ToastContainer/>
             <div className='w-100'>
                 <div style={{ marginBottom: 16, }} className='d-flex justify-content-between align-items-center gap-16 flex-wrap bg-white p-3 rounded-3'>
                     <h2 className="mb-0">Enquiries</h2>

@@ -29,7 +29,7 @@ function App() {
         <Route path="/" element={<PageLayout />} >
           <Route index element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword/>} />
-          <Route path="reset-password" element={<ResetPassword/>} />          
+          <Route path="reset-password/:token" element={<ResetPassword/>} />          
           <Route path='admin' element={<DashboardLayout/>} > 
             <Route index element={<Dashboard/>} />
             <Route path='add-product' element={<AddProduct/>} />

@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import uploadServices from "./uploadServices";
+import { toast } from "react-toastify";
+import logout from "../../utils/logout";
 
 const initialState = {
     images : [],
@@ -62,6 +64,9 @@ const uploadSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload.message;
+                if(logout(action.error.message)){
+                    toast.error('Session Expired! Please Log In.')
+                }            
             })
             .addCase(deleteImg.pending, (state) => {
                 state.isLoading = true;
@@ -80,6 +85,9 @@ const uploadSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload.message;
+                if(logout(action.error.message)){
+                    toast.error('Session Expired! Please Log In.')
+                }            
             });
     },
 });

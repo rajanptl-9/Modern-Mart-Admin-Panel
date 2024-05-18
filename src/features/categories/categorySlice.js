@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import categoryServices from './categoryServices';
+import logout from '../../utils/logout';
+import { toastError, toastSuccess } from '../../utils/tostify';
 
 const initialState = {
     categories: null,
@@ -80,6 +82,9 @@ export const categorySlice = createSlice({
                 state.isSuccess = false;
                 state.categories = null;
                 state.message = action.error;
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(createCategory.pending, (state) => {
                 state.isLoading = true;
@@ -99,6 +104,9 @@ export const categorySlice = createSlice({
                 state.isSuccess = false;
                 state.newCategory = {};
                 state.message = "Creation failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(getOneCategory.pending, (state) => {
                 state.isLoading = true;
@@ -116,6 +124,9 @@ export const categorySlice = createSlice({
                 state.isSuccess = false;
                 state.categoryName = null;
                 state.message = action.error;
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(updateCategory.pending, (state) => {
                 state.isLoading = true;
@@ -135,6 +146,9 @@ export const categorySlice = createSlice({
                 state.isSuccess = false;
                 state.updatedCategory = null;
                 state.message = "Update failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }                
             })
             .addCase(deleteCategory.pending, (state) => {
                 state.isLoading = true;
@@ -147,6 +161,7 @@ export const categorySlice = createSlice({
                 state.isError = false;
                 state.deletedCategory = action.payload.title;
                 state.message = "Category Deleted Successfully!";
+                toastSuccess("Category Deleted!");
             })
             .addCase(deleteCategory.rejected,(state, action) => {
                 state.isLoading = false;
@@ -154,6 +169,11 @@ export const categorySlice = createSlice({
                 state.isSuccess = false;
                 state.deletedCategory = null;
                 state.message = "Delete failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }else{
+                    toastError("Category Failed to Delete!")
+                }
             })
             .addCase(resetState, () => initialState)
     },

@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import customerServices from "./customerServices";
+import logout from "../../utils/logout";
+import { toastError, toastSuccess } from '../../utils/tostify';
 
 const initialState = {
   customers: null,
@@ -78,6 +80,9 @@ export const customerSlice = createSlice({
         state.isSuccess = false;
         state.customers = null;
         state.message = action.error.message;
+        if (logout(action.error.message)) {
+            toastError('Session Expired! Please Log In.');
+        }
       })
       .addCase(getBlockedCustomers.pending, (state) => {
         state.isLoading = true;
@@ -95,6 +100,9 @@ export const customerSlice = createSlice({
         state.isSuccess = false;
         state.customers = null;
         state.message = action.error.message;
+        if (logout(action.error.message)) {
+            toastError('Session Expired! Please Log In.')
+        }
       })
       .addCase(blockCustomer.pending, (state) => {
         state.isLoading = true;
@@ -105,6 +113,7 @@ export const customerSlice = createSlice({
         state.isError = false;
         state.blockedCustomer = action.payload.user;
         state.message = action.payload.message;
+        toastSuccess("Customer Blocked!");
       })
       .addCase(blockCustomer.rejected, (state, action) => {
         state.isLoading = false;
@@ -112,6 +121,11 @@ export const customerSlice = createSlice({
         state.isSuccess = false;
         state.blockedCustomer = null;
         state.message = action.error.message;
+        if (logout(action.error.message)) {
+            toastError('Session Expired! Please Log In.')
+        }else{
+            toastError("Failed to Block Customer!");
+        }
       })
       
       .addCase(unblockCustomer.pending, (state) => {
@@ -123,6 +137,7 @@ export const customerSlice = createSlice({
         state.isError = false;
         state.unblockedCustomer = action.payload.user;
         state.message = action.payload.message;
+        toastSuccess("Customer Unblocked");
       })
       .addCase(unblockCustomer.rejected, (state, action) => {
         state.isLoading = false;
@@ -130,6 +145,11 @@ export const customerSlice = createSlice({
         state.isSuccess = false;
         state.unblockedCustomer = null;
         state.message = action.error.message;
+        if (logout(action.error.message)) {
+            toastError('Session Expired! Please Log In.')
+        }else{
+            toastError("Failed to Unblock Customer!");
+        }
       })
   }
 });

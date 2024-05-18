@@ -2,8 +2,8 @@ import axios from "axios";
 import { base_url } from "../../utils/base_url";
 import { config } from "../../utils/config";
 
-const getProducts = async () => {
-    const response = await axios.get(`${base_url}product/`);
+const getProducts = async (data) => {
+    const response = await axios.get(`${base_url}product/${data.limit?`?limit=${data.limit}`:''}`);
     return response.data;
 };
 

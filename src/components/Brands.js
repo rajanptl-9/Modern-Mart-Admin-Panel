@@ -5,6 +5,7 @@ import { deleteBrand, getBrands } from '../features/brands/brandSlice';
 import { Link } from 'react-router-dom';
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import { ToastContainer } from 'react-toastify';
 
 const columns = [
     {
@@ -67,6 +68,7 @@ const Brands = () => {
     }
     return (
         <>
+            <ToastContainer/>
             <div className='w-100'>
                 <div
                     style={{

@@ -3,6 +3,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getOneEnquiry, resetState, updateEnquiry } from '../features/enquiries/enquirySlice';
+import { ToastContainer } from 'react-toastify';
 
 const ViewEnquiry = () => {
     const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const ViewEnquiry = () => {
 
     return (
         <>
+            <ToastContainer/>
             <div className='w-100'>
                 <div
                     style={{

@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import brandServices from "./brandServices";
+import logout from "../../utils/logout";
+import { toast } from "react-toastify";
+import { toastError, toastSuccess } from "../../utils/tostify";
 
 const initialState = {
     brands: null,
@@ -88,6 +91,9 @@ export const brandSlice = createSlice({
                 state.isError = true;
                 state.isSuccess = false;
                 state.message = "Creation failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(getBrands.pending, (state) => {
                 state.isLoading = true;
@@ -105,6 +111,9 @@ export const brandSlice = createSlice({
                 state.isSuccess = false;
                 state.brands = {};
                 state.message = action.meta.requestId;
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(getOneBrand.pending, (state) => {
                 state.isLoading = true;
@@ -122,6 +131,9 @@ export const brandSlice = createSlice({
                 state.isSuccess = false;
                 state.brandName = null;
                 state.message = action.meta.requestId;
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(updateBrand.pending, (state) => {
                 state.isLoading = true;
@@ -139,6 +151,9 @@ export const brandSlice = createSlice({
                 state.isSuccess = false;
                 state.updatedBrand = null;
                 state.message = "Update failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(deleteBrand.pending, (state) => {
                 state.isLoading = true;
@@ -148,14 +163,21 @@ export const brandSlice = createSlice({
                 state.isSuccess = true;
                 state.isError = false;
                 state.deletedBrand = action.payload.title;
-                state.message = "Brand Updated Successfully!";
+                state.message = "Brand Deleted Successfully!";
+                toastSuccess("Brand Deleted!")
             })
             .addCase(deleteBrand.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.isSuccess = false;
                 state.deletedBrand = null;
-                state.message = "Update failed!";
+                state.message = "Delete failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }else{
+                    toastError("Brand Failed to Delete!")
+                
+                }
             })
             .addCase(resetState, () => initialState)
 

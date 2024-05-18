@@ -77,11 +77,11 @@ const DashboardLayout = () => {
     } else if (key === "Coupon List") {
       navigate("coupon-list");
     } else if (key === "Log Out") {
-      localStorage.removeItem('user');
+      localStorage.clear();
       dispatch(resetState());      
       window.location.replace("/");
     } else if (key === "Change Password") {
-      localStorage.removeItem('user');
+      localStorage.clear();
       dispatch(resetState());
       setTimeout(() => {
         navigate("/forgot-password");
@@ -129,8 +129,8 @@ const DashboardLayout = () => {
                 <div className='admin-details d-flex align-items-center gap-8'>
                   <img src={admin} alt="admin" height={36} width={36} />
                   <span className='admin-email d-flex justify-content-center flex-column align-items-start'>
-                    <span className='mb-0 p-0'>{user.firstname} {user.lastname}</span>
-                    <span className='mb-0 p-0'>{user.email}</span>
+                    <span className='mb-0 p-0'>{user? user?.firstname : "Fname"} {user? user?.lastname: "Lname"}</span>
+                    <span className='mb-0 p-0'>{user? user?.email : "examle@modernmart.com"}</span>
                   </span>
                 </div>
               </div>

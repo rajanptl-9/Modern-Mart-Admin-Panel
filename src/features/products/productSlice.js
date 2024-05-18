@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import productServices from "./productServices";
+import logout from "../../utils/logout";
+import { toast } from "react-toastify";
+import { toastError, toastSuccess } from '../../utils/tostify';
 
 const initialState = {
     products: null,
@@ -11,9 +14,9 @@ const initialState = {
     message: "",
 };
 
-export const getProducts = createAsyncThunk("product/get-Products", async (thunkAPI) => {
+export const getProducts = createAsyncThunk("product/get-Products", async (data,thunkAPI) => {
     try {
-        const response = await productServices.getProducts();
+        const response = await productServices.getProducts(data);
         return response;
     } catch (error) {
         return thunkAPI.rejectWithValue(error);
@@ -77,6 +80,9 @@ export const productSlice = createSlice({
                 state.isError = false;
                 state.newProduct = action.payload.title;
                 state.message = "New Product is created successfully!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.');
+                }
             })
             .addCase(createProduct.rejected, (state, action) => {
                 state.isLoading = false;
@@ -111,6 +117,7 @@ export const productSlice = createSlice({
                 state.isError = false;
                 state.deletedProduct = action.payload;
                 state.message = "Product deleted successfully!";
+                toastSuccess("Product Deleted!");
             })
             .addCase(deleteProduct.rejected, (state, action) => {
                 state.isLoading = false;
@@ -118,6 +125,11 @@ export const productSlice = createSlice({
                 state.isSuccess = false;
                 state.deletedProduct = {};
                 state.message = action.error.message;
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.');
+                }else{
+                    toastError("Product Failed to Delete!");
+                }                
             })
             .addCase(resetState, () => initialState)
     },

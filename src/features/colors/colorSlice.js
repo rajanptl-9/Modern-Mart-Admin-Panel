@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import colorServices from "./colorServices";
+import logout from "../../utils/logout";
+import { toastError, toastSuccess } from '../../utils/tostify';
 
 const initialState = {
     colors: null,
@@ -91,6 +93,9 @@ export const colorSlice = createSlice({
                 state.isSuccess = false;
                 state.colors = null;
                 state.message = action.error;
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(createColor.pending, (state) => {
                 state.isLoading = true;
@@ -108,6 +113,9 @@ export const colorSlice = createSlice({
                 state.isSuccess = false;
                 state.newColor = null;
                 state.message = "Creation failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(getOneColor.pending, (state) => {
                 state.isLoading = true;
@@ -124,6 +132,9 @@ export const colorSlice = createSlice({
                 state.isSuccess = false;
                 state.colorName = null;
                 state.message = action.error;
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(updateColor.pending, (state) => {
                 state.isLoading = true;
@@ -141,6 +152,9 @@ export const colorSlice = createSlice({
                 state.isSuccess = false;
                 state.updatedColor = null;
                 state.message = "Update failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }
             })
             .addCase(deleteColor.pending, (state) => {
                 state.isLoading = true;
@@ -151,6 +165,7 @@ export const colorSlice = createSlice({
                 state.isError = false;
                 state.deletedColor = action.payload.title;
                 state.message = "Color deleted successfully";
+                toastSuccess("Color Deleted!");
             })
             .addCase(deleteColor.rejected, (state, action) => {
                 state.isLoading = false;
@@ -158,6 +173,11 @@ export const colorSlice = createSlice({
                 state.isSuccess = false;
                 state.deletedColor = null;
                 state.message = "Delete failed!";
+                if (logout(action.error.message)) {
+                    toastError('Session Expired! Please Log In.')
+                }else{
+                    toastError("Color Failed to Delete!");
+                }
             })
             .addCase(resetState, () => initialState)
     },

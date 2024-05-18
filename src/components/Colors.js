@@ -5,6 +5,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteColor, getColors } from '../features/colors/colorSlice';
+import { ToastContainer } from 'react-toastify';
 
 const columns = [
     {
@@ -67,6 +68,7 @@ const Colors = () => {
     }
     return (
         <>
+            <ToastContainer/>
             <div className='w-100'>
                 <div
                     style={{

@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import couponServices from "./couponServices";
+import logout from "../../utils/logout";
+import { toast } from "react-toastify";
 
 const initialState = {
     coupons: null,
@@ -81,6 +83,9 @@ const couponSlice = createSlice({
                 state.isSuccess = false;
                 state.coupons = null;
                 state.message = action.payload;
+                if (logout(action.error.message)) {
+                    toast.error('Session Expired! Please Log In.')
+                }
             })
             .addCase(createCoupon.pending, (state) => {
                 state.isLoading = true;
@@ -98,6 +103,9 @@ const couponSlice = createSlice({
                 state.isSuccess = false;
                 state.newColor = null;
                 state.message = "Creation failed!";
+                if (logout(action.error.message)) {
+                    toast.error('Session Expired! Please Log In.')
+                }
             })
             .addCase(getOneCoupon.pending, (state) => {
                 state.isLoading = true;
@@ -115,6 +123,9 @@ const couponSlice = createSlice({
                 state.isSuccess = false;
                 state.couponData = null;
                 state.message = action.payload;
+                if (logout(action.error.message)) {
+                    toast.error('Session Expired! Please Log In.')
+                }
             })
             .addCase(updateCoupon.pending, (state) => {
                 state.isLoading = true;
@@ -132,6 +143,9 @@ const couponSlice = createSlice({
                 state.isSuccess = false;
                 state.newColor = null;
                 state.message = "Update failed!";
+                if (logout(action.error.message)) {
+                    toast.error('Session Expired! Please Log In.')
+                }
             })
             .addCase(deleteCoupon.pending, (state) => {
                 state.isLoading = true;
@@ -149,6 +163,9 @@ const couponSlice = createSlice({
                 state.isSuccess = false;
                 state.deletedCoupon = null;
                 state.message = "Delete failed!";
+                if (logout(action.error.message)) {
+                    toast.error('Session Expired! Please Log In.')
+                }
             })
             .addCase(resetState, () => initialState)
     }

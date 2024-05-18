@@ -10,8 +10,20 @@ const login = async (userData) => {
   return response.data;
 }
 
+const forgotPassword = async (email) => {
+  const response = await axios.post(`${base_url}user/forgot-password-token`, email);
+  return response.data;
+}
+
+const resetPassword = async (data) => {
+  const response = await axios.put(`${base_url}user/reset-password/${data.token}`, data);
+  return response.data;
+}
+
 const authServices = {
   login,
+  forgotPassword,
+  resetPassword,
 };
 
 export default authServices;

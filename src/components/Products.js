@@ -5,6 +5,7 @@ import { deleteProduct, getProducts } from '../features/products/productSlice';
 import { Link } from 'react-router-dom';
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import { ToastContainer } from 'react-toastify';
 
 const columns = [
     {
@@ -52,7 +53,7 @@ const Products = () => {
 
     useEffect(() => {
         setDeleteId(null);
-        dispatch(getProducts());
+        dispatch(getProducts({limit:Infinity}));
     }, [dispatch,deletedProduct])    
     
     const handleDeleteProduct = (id) => {
@@ -65,28 +66,30 @@ const Products = () => {
         dispatch(deleteProduct(deleteId));
     }
     
-    const productState = useSelector(state => state.products.products);
+    const productState = useSelector(state => state?.products?.products?.prod);
+    
     
     const tabledata = [];
     if (productState) {
-        for (let i = 0; i < productState.length; i++) {      
+        for (let i = 0; i < productState?.length; i++) {      
             tabledata.push({
                 key: i,
-                name: productState[i].title,
-                brand: productState[i].brand.title,
-                price: productState[i].price,
-                quantity: productState[i].quantity,
-                category: productState[i].category.title,
+                name: productState[i]?.title,
+                brand: productState[i]?.brand.title,
+                price: productState[i]?.price,
+                quantity: productState[i]?.quantity,
+                category: productState[i]?.category.title,
                 action: <>
-                    <Link to={`/admin/add-product/${productState[i]._id}`} className="text-decoration-none text-primary"><FaRegEdit className='me-2 fs-6' /></Link>
-                    <button className="text-decoration-none  border-0 bg-white text-danger" onClick={() => handleDeleteProduct(productState[i]._id)}><MdOutlineDeleteForever className='me-2 fs-5' /></button>
+                    <Link to={`/admin/add-product/${productState[i]?._id}`} className="text-decoration-none text-primary"><FaRegEdit className='me-2 fs-6' /></Link>
+                    <button className="text-decoration-none  border-0 bg-white text-danger" onClick={() => handleDeleteProduct(productState[i]?._id)}><MdOutlineDeleteForever className='me-2 fs-5' /></button>
                 </>,
             });
         }
     }
-
+    
     return (
         <>
+            <ToastContainer/>
             <div className='w-100'>
                 <div style={{ marginBottom: 16, }} className='d-flex justify-content-between align-items-center gap-16 flex-wrap bg-white p-3 rounded-3'>
                     <h2 className="mb-0">Products</h2>
