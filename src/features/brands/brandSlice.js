@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import brandServices from "./brandServices";
 import logout from "../../utils/logout";
-import { toast } from "react-toastify";
 import { toastError, toastSuccess } from "../../utils/tostify";
 
 const initialState = {
