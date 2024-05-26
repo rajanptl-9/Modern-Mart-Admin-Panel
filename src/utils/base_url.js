@@ -1,1 +1,1 @@
-export const base_url = "https://modern-mart-server.onrender.com/api/";
+export const base_url = "https://server-modern-mart.netlify.app/.netlify/functions/api/";
