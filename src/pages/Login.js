@@ -19,7 +19,7 @@ const Login = () => {
         if (user) {
             setSuccess(1);
             setTimeout(() => {
-                window.location.replace("/admin");
+                window.location.replace("/dashboard");
             }, 1000);
         } else if (isError && !isSuccess) {
             setSuccess(2);

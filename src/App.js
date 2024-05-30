@@ -30,7 +30,7 @@ function App() {
           <Route index element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword/>} />
           <Route path="reset-password/:token" element={<ResetPassword/>} />          
-          <Route path='admin' element={<DashboardLayout/>} > 
+          <Route path='dashboard' element={<DashboardLayout/>} > 
             <Route index element={<Dashboard/>} />
             <Route path='add-product' element={<AddProduct/>} />
             <Route path='add-product/:id' element={<AddProduct/>} />

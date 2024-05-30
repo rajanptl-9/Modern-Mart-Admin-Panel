@@ -5,8 +5,9 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword } from '../features/auth/authSlice';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toastError, toastSuccess } from '../utils/tostify';
 
 const ResetPassword = () => {
     const dispatch = useDispatch();
@@ -47,32 +48,12 @@ const ResetPassword = () => {
     useEffect(() => {
         if (!authState.isLoading) {
             if (authState.isSuccess && !authState.isError) {
-                toast.success('✓ Password changed successfully!', {
-                    position: "top-center",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
+                toastSuccess('Password changed successfully!');
                 setTimeout(() => {
                     navigate('/')
                 }, 2000);
             } else if (authState.isError && !authState.isSuccess) {
-                toast.error('✗ Failed password reset!', {
-                    position: "top-center",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
+                toastError('Failed password reset!');
             }
         }
         //eslint-disable-next-line

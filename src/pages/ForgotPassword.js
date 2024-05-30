@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { forgotPassword } from '../features/auth/authSlice';
-import { toast, Bounce, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { toastError, toastSuccess } from '../utils/tostify';
 
 const ForgotPassword = () => {
     const dispatch = useDispatch();
@@ -26,29 +27,9 @@ const ForgotPassword = () => {
     useEffect(() => {
         if (!authState.isLoading) {
             if (authState.isSuccess && !authState.isError) {
-                toast.success('✓ Email sent successfully!', {
-                    position: "top-center",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
+                toastSuccess('Email sent successfully!');
             } else if (authState.isError && !authState.isSuccess) {
-                toast.error('✗ Failed password reset!', {
-                    position: "top-center",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
+                toastError("Failed to reset password!");
             }
         }
         //eslint-disable-next-line

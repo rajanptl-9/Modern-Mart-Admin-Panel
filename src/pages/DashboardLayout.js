@@ -47,7 +47,7 @@ const DashboardLayout = () => {
   });
   const handleMenuClick = (key) => {
     if (key === "Dashboard") {
-      navigate("/admin");
+      navigate("/dashboard");
     } else if (key === "Block Customer") {
       navigate("block-customer");
     } else if (key === "Unblock Customer") {
@@ -87,7 +87,7 @@ const DashboardLayout = () => {
         navigate("/forgot-password");
       }, 500);
     } else {
-      navigate('/admin');
+      navigate('/dashboard');
     }
   }
   return (
